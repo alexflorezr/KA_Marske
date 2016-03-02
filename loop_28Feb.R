@@ -8,8 +8,8 @@ Marske_phylo <- function(species_vector, raw_data_path, output_path){
   library(sidier)
   library(reshape2)
   # Creates an empty data frame to save the species genetic stats
-  Marske_stats <- as.data.frame(matrix(nrow=length(species_vector), ncol=9))
-  colnames(Marske_stats) <- c("Species", "N_seqs", "N_haps", "nuc_div", "TajD", "TajD.p.beta", "R2", "R2.p", "Phist")
+  Marske_stats <- as.data.frame(matrix(nrow=length(species_vector), ncol=10))
+  colnames(Marske_stats) <- c("Species", "N_seqs", "N_haps", "nuc_div", "Var_nuc_div", "TajD", "TajD.p.beta", "R2", "R2.p", "Phist")
   for (sp in seq_along(species_vector)){
     #gets seq data in as DNAbin
     setwd(paste(raw_data_path, "/Fasta/", sep=""))
@@ -32,7 +32,7 @@ Marske_phylo <- function(species_vector, raw_data_path, output_path){
     # Number of haplotypes
     N_haps_temp  <- length(unique(full_data_temp$haplotype))
     # Nucleotide diversity (Pegas)
-    sp_nuc.div_temp  <-  nuc.div(sp_align_temp, variance = F, pairwise.deletion = FALSE)
+    sp_nuc.div_temp  <-  nuc.div(sp_align_temp, variance = T, pairwise.deletion = FALSE)
     #sp_hap.div<-haplotypic.diversity(sp_gtype) #haplotype diversity, strataG
     #Tajima's D, pegas, #Pval.beta - p-value assuming that D follows a beta distribution (Tajima, 1989)
     sp_tajD_temp <-tajima.test(sp_align_temp) 
@@ -53,7 +53,7 @@ Marske_phylo <- function(species_vector, raw_data_path, output_path){
     sp_ghaps_temp <-read.fasta(paste(species_vector[sp], "_haps.fasta", sep=""))
     #contents of row and col columns are UniqueInds
     #need the sep element to not put space in the name
-    Marske_stats[sp,] <- c(species_vector[sp], N_seqs_temp, N_haps_temp, sp_nuc.div_temp, sp_tajD_temp$D, sp_tajD_temp$Pval.beta, sp_R2_temp$R2, sp_R2_temp$P.val, "phist")
+    Marske_stats[sp,] <- c(species_vector[sp], N_seqs_temp, N_haps_temp, sp_nuc.div_temp[1], sp_nuc.div_temp[2], sp_tajD_temp$D, sp_tajD_temp$Pval.beta, sp_R2_temp$R2, sp_R2_temp$P.val, NA)
   }
 setwd(output_path)
 write.csv(Marske_stats, "results.csv")
