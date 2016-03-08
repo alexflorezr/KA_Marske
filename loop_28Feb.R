@@ -55,8 +55,8 @@ Marske_phylo <- function(species_vector, raw_data_path, output_path){
     #need the sep element to not put space in the name
     Marske_stats[sp,] <- c(species_vector[sp], N_seqs_temp, N_haps_temp, sp_nuc.div_temp[1], sp_nuc.div_temp[2], sp_tajD_temp$D, sp_tajD_temp$Pval.beta, sp_R2_temp$R2, sp_R2_temp$P.val, NA)
   }
-setwd(output_path)
-write.csv(Marske_stats, "results.csv")
+  setwd(output_path)
+  write.csv(Marske_stats, "results.csv")
 }
 
 ### A function to estimate all the parameters you need ####
